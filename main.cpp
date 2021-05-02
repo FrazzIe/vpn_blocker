@@ -32,6 +32,13 @@ PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	return 0;
 }
 
+PCL void OnPlayerConnect(int clientnum, netadr_t* netaddress, char* pbguid, char* userinfo, int authstatus, char* deniedmsg,  int deniedmsgbufmaxlen) {
+	char address[128];
+
+	Plugin_NET_AdrToStringMT(netaddress, address, sizeof(address));
+	return;
+}
+
 PCL void OnInfoRequest(pluginInfo_t *info) { //Function used to obtain information about the plugin
 	info->handlerVersion.major = PLUGIN_HANDLER_VERSION_MAJOR;
 	info->handlerVersion.minor = PLUGIN_HANDLER_VERSION_MINOR;
