@@ -64,6 +64,33 @@ PCL void OnPlayerConnect(int clientnum, netadr_t* netaddress, char* pbguid, char
 		return;
 
 	std::string url(apiUrl + ipData.front() + apiUrlParams);
+
+	//Make GET Request to API
+	char data[8192];
+	int contentLength;
+
+	ftRequest_t* request = Plugin_HTTP_GET(url.c_str());
+
+	if (request == NULL) {
+		Plugin_Printf("[VPN BLOCKER] Request was NULL\n");
+		return;
+	}
+
+	if (request->code != 200  && request->contentLength <= 0) {
+		Plugin_Printf("[VPN BLOCKER] Request failed with code: %d\n", request->code);
+		return;
+	}
+
+	//Get response
+	contentLength = request->contentLength;
+	memcpy(data, request->extrecvmsg->data + request->headerLength, contentLength);
+	data[contentLength] = 0;
+
+	//Free request
+	Plugin_HTTP_FreeObj(request);
+
+	//Get string response
+	std::string result(data);
 	return;
 }
 
