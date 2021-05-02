@@ -68,6 +68,7 @@ PCL void OnPlayerConnect(int clientnum, netadr_t* netaddress, char* pbguid, char
 	//Make GET Request to API
 	char data[8192];
 	int contentLength;
+	int resCode;
 
 	ftRequest_t* request = Plugin_HTTP_GET(url.c_str());
 
@@ -83,6 +84,7 @@ PCL void OnPlayerConnect(int clientnum, netadr_t* netaddress, char* pbguid, char
 
 	//Get response
 	contentLength = request->contentLength;
+	resCode = request->code;
 	memcpy(data, request->extrecvmsg->data + request->headerLength, contentLength);
 	data[contentLength] = 0;
 
