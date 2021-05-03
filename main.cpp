@@ -54,7 +54,10 @@ PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	return 0;
 }
 
-PCL void OnPlayerConnect(int clientnum, netadr_t* netaddress, char* pbguid, char* userinfo, int authstatus, char* deniedmsg,  int deniedmsgbufmaxlen) {
+PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
+	if (message[0])
+		return;
+
 	if (apiLimitReached) {
 		std::int64_t epochTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 		if (epochTime > apiCooldownEnd)
@@ -65,7 +68,7 @@ PCL void OnPlayerConnect(int clientnum, netadr_t* netaddress, char* pbguid, char
 
 	char address[128];
 
-	Plugin_NET_AdrToStringShortMT(netaddress, address, sizeof(address));
+	Plugin_NET_AdrToStringShortMT(&baninfo->adr, address, sizeof(address));
 
 	std::string ip(address);
 	std::string url(apiUrl + ip + apiUrlParams);
@@ -126,7 +129,7 @@ PCL void OnPlayerConnect(int clientnum, netadr_t* netaddress, char* pbguid, char
 		char format[2048];
 
 		snprintf(format, strlen(vpnMsg->string) + 12, "%s [%i/100]", vpnMsg->string, percentage);
-		strncpy(deniedmsg, format, strlen(format) + 1);
+		strncpy(message, format, strlen(format) + 1);
 	}
 
 	return;
