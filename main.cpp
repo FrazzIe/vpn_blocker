@@ -77,7 +77,7 @@ PCL void OnPlayerConnect(int clientnum, netadr_t* netaddress, char* pbguid, char
 		return;
 	}
 
-	if (request->code != 200  && request->contentLength <= 0) {
+	if (request->code != 200 && request->contentLength <= 0) {
 		Plugin_Printf("[VPN BLOCKER] Request failed with code: %d\n", request->code);
 		return;
 	}
