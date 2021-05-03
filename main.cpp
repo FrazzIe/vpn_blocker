@@ -127,14 +127,14 @@ PCL void OnPlayerConnect(int clientnum, netadr_t* netaddress, char* pbguid, char
 	try {
 		probability = std::stof(result);
 	} catch(...) {
-		Plugin_Printf("[VPN BLOCKER] Failed to convert request result");
+		Plugin_Printf("[VPN BLOCKER] Failed to convert request result\n");
 	}
 
 	if (probability == 2)
 		return;
 
 	if (probability < 0) {
-		Plugin_Printf("[VPN BLOCKER] Got error code: %f, check https://getipintel.net/", probability);
+		Plugin_Printf("[VPN BLOCKER] Got error code: %f, check https://getipintel.net/\n", probability);
 
 		if (resCode == 429) {
 			apiLimitReached = true;
