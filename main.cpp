@@ -2,11 +2,15 @@
 
 #include <string>
 #include <vector>
+#include <chrono>
 
 cvar_t *vpnEmail;
 cvar_t *vpnFlags;
 const std::string apiUrl("http://check.getipintel.net/check.php?ip=");
 std::string apiUrlParams;
+bool apiLimitReached = false;
+std::int64_t apiCooldown = 3600000; //1 hour
+std::int64_t apiCooldownEnd;
 
 //Function to split string `str` using a given delimiter
 std::vector<std::string> Split(const std::string &str, char delim) {
@@ -53,6 +57,14 @@ PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 }
 
 PCL void OnPlayerConnect(int clientnum, netadr_t* netaddress, char* pbguid, char* userinfo, int authstatus, char* deniedmsg,  int deniedmsgbufmaxlen) {
+	if (apiLimitReached) {
+		std::int64_t epochTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+		if (epochTime > apiCooldownEnd)
+			apiLimitReached = false;
+		else
+			return;
+	}
+
 	char address[128];
 
 	Plugin_NET_AdrToStringMT(netaddress, address, sizeof(address));
@@ -103,6 +115,18 @@ PCL void OnPlayerConnect(int clientnum, netadr_t* netaddress, char* pbguid, char
 
 	if (probability == 2)
 		return;
+
+	if (probability < 0) {
+		Plugin_Printf("[VPN BLOCKER] Got error code: %f, check https://getipintel.net/", probability);
+
+		if (resCode == 429) {
+			apiLimitReached = true;
+			std::int64_t epochTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+			apiCooldownEnd = epochTime + apiCooldown;
+		}
+
+		return;
+	}
 	return;
 }
 
