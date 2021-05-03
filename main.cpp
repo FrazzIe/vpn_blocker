@@ -58,6 +58,14 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 	if (message[0])
 		return;
 
+	if (baninfo->adr.type == NA_BOT)
+		return;
+	else if (baninfo->adr.type == NA_BAD) {
+		std::string badAddressMsg = "Got a bad address when connecting, please try again!";
+		strncpy(message, badAddressMsg.c_str(), badAddressMsg.length() + 1);
+		return;
+	}
+
 	if (apiLimitReached) {
 		std::int64_t epochTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 		if (epochTime > apiCooldownEnd)
