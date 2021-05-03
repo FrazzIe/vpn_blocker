@@ -50,6 +50,11 @@ PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 		return -1;
 	}
 
+	if (!vpnMsg->string[0]) {
+		Plugin_PrintError("Init failure. Cvar vpn_blocker_kick_msg is not set\n");
+		return -1;
+	}
+
 	std::string vpnEmailStr(vpnEmail->string);
 	std::string vpnFlagStr(vpnFlags->string);
 
