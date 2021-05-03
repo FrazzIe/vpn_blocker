@@ -69,6 +69,10 @@ std::unordered_set<std::uint64_t> LoadWhitelist() {
 	return idSet;
 }
 
+bool IsWhitelisted(std::int64_t id) {
+	return whitelistSet.find(id) != whitelistSet.end();
+}
+
 PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	vpnEmail = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_email", "", 0, "Email address to be used with IP Intel API (https://getipintel.net/)I");
 	vpnFlags = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_flag", "m", 0, "Flag to be used with IP Intel API (https://getipintel.net/)");
