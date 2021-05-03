@@ -7,6 +7,7 @@
 cvar_t *vpnEmail;
 cvar_t *vpnFlags;
 cvar_t *vpnMsg;
+cvar_t *vpnThreshold;
 const std::string apiUrl("http://check.getipintel.net/check.php?ip=");
 std::string apiUrlParams;
 bool apiLimitReached = false;
@@ -36,6 +37,10 @@ PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	vpnEmail = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_email", "", 0, "Email address to be used with IP Intel API (https://getipintel.net/)I");
 	vpnFlags = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_flag", "m", 0, "Flag to be used with IP Intel API (https://getipintel.net/)");
 	vpnMsg = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_kick_msg", "Usage of a VPN or Proxy is not allowed on this server!", 0, "The message to be shown to the user when they are denied access to the server");
+	vpnThreshold = (cvar_t*)Plugin_Cvar_RegisterFloat("vpn_blocker_threshold", 0.99f, 0.0f, 1.0f, 0, "Threshold value of when to kick a player based on the probability of using a VPN or Proxy (0.99+ is recommended)");
+
+	vpnThreshold->fmin = 0.0f;
+	vpnThreshold->fmax = 1.0f;
 
 	if (!vpnEmail->string[0]) {
 		Plugin_PrintError("Init failure. Cvar vpn_blocker_email is not set\n");
@@ -52,6 +57,11 @@ PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 
 	if (!vpnMsg->string[0]) {
 		Plugin_PrintError("Init failure. Cvar vpn_blocker_kick_msg is not set\n");
+		return -1;
+	}
+
+	if (vpnThreshold->value < vpnThreshold->fmin || vpnThreshold->value > vpnThreshold->fmax) {
+		Plugin_PrintError("Init failure. Cvar vpn_blocker_threshold must be between %f and %f\n", vpnThreshold->fmin, vpnThreshold->fmax);
 		return -1;
 	}
 
@@ -135,7 +145,7 @@ PCL void OnPlayerConnect(int clientnum, netadr_t* netaddress, char* pbguid, char
 		return;
 	}
 
-	if (probability >= 0.99f) {
+	if (probability >= vpnThreshold->value) {
 		int percentage = (int)(probability * 100);
 		char format[2048];
 
