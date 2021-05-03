@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <unordered_set>
 
 cvar_t *vpnEmail;
 cvar_t *vpnFlags;
@@ -15,6 +16,58 @@ std::string apiUrlParams;
 bool apiLimitReached = false;
 std::int64_t apiCooldown = 3600000; //1 hour
 std::int64_t apiCooldownEnd;
+std::unordered_set<std::uint64_t> whitelistSet;
+
+std::unordered_set<std::uint64_t> LoadWhitelist() {
+	std::unordered_set<std::uint64_t> idSet = {};
+	fileHandle_t fileHandle;
+	long fileLength;
+
+	fileLength = Plugin_FS_SV_FOpenFileRead(vpnWhitelistFile->string, &fileHandle);
+
+	if (fileHandle == 0) {
+		Plugin_Printf("[VPN BLOCKER] Couldn't open %s, does it exist?\n", vpnWhitelistFile->string);
+		Plugin_Cvar_SetBool(vpnWhitelist, qfalse);
+		Plugin_FS_FCloseFile(fileHandle);
+		return idSet;
+	}
+
+	if (fileLength < 1) {
+		Plugin_Printf("[VPN BLOCKER] Couldn't open %s because it's empty!\n", vpnWhitelistFile->string);
+		Plugin_Cvar_SetBool(vpnWhitelist, qfalse);
+		Plugin_FS_FCloseFile(fileHandle);
+		return idSet;
+	}
+
+	char buf[256];
+	int line;
+	int count = 0;
+	buf[0] = 0;
+
+	while (true) {
+		line = Plugin_FS_ReadLine(buf, sizeof(buf), fileHandle);
+
+		if (line == 0) {
+			Plugin_Printf("[VPN BLOCKER] %i lines parsed from %s\n", count, vpnWhitelistFile->string);
+			break;
+		} else if(line == -1) {
+			Plugin_Printf("[VPN BLOCKER] Could not read from %s\n", vpnWhitelistFile->string);
+			break;
+		}
+
+		//Plugin_Printf("[VPN BLOCKER] line %i contains %s\n", count, buf);
+
+		std::uint64_t id = Plugin_StringToSteamID(buf);
+
+		//Plugin_Printf("[VPN BLOCKER] line %i contains %llu\n", count, id);
+
+		idSet.insert(id);
+		count++;
+	}
+
+	Plugin_FS_FCloseFile(fileHandle);
+	return idSet;
+}
 
 PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	vpnEmail = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_email", "", 0, "Email address to be used with IP Intel API (https://getipintel.net/)I");
@@ -22,6 +75,7 @@ PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	vpnMsg = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_kick_msg", "Usage of a VPN or Proxy is not allowed on this server!", 0, "The message to be shown to the user when they are denied access to the server");
 	vpnThreshold = (cvar_t*)Plugin_Cvar_RegisterFloat("vpn_blocker_threshold", 0.99f, 0.0f, 1.0f, 0, "Threshold value of when to kick a player based on the probability of using a VPN or Proxy (0.99+ is recommended)");
 	vpnWhitelist = (cvar_t*)Plugin_Cvar_RegisterBool("vpn_blocker_whitelist", qtrue, 0, "Enable or disable the use of the whitelist");
+	vpnWhitelistFile = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_whitelist_file", "vpn_whitelist.dat", CVAR_INIT, "Name of file which holds the whitelist");
 
 	vpnThreshold->fmin = 0.0f;
 	vpnThreshold->fmax = 1.0f;
@@ -56,9 +110,8 @@ PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 
 	qboolean whitelistEnabled = Plugin_Cvar_GetBoolean(vpnWhitelist);
 
-	if (whitelistEnabled == qtrue) {
-
-	}
+	if (whitelistEnabled == qtrue)
+		whitelistSet = LoadWhitelist();
 
 	return 0;
 }
