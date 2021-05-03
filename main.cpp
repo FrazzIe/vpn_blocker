@@ -8,6 +8,8 @@ cvar_t *vpnEmail;
 cvar_t *vpnFlags;
 cvar_t *vpnMsg;
 cvar_t *vpnThreshold;
+cvar_t *vpnWhitelist;
+cvar_t *vpnWhitelistFile;
 const std::string apiUrl("http://check.getipintel.net/check.php?ip=");
 std::string apiUrlParams;
 bool apiLimitReached = false;
@@ -19,6 +21,7 @@ PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	vpnFlags = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_flag", "m", 0, "Flag to be used with IP Intel API (https://getipintel.net/)");
 	vpnMsg = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_kick_msg", "Usage of a VPN or Proxy is not allowed on this server!", 0, "The message to be shown to the user when they are denied access to the server");
 	vpnThreshold = (cvar_t*)Plugin_Cvar_RegisterFloat("vpn_blocker_threshold", 0.99f, 0.0f, 1.0f, 0, "Threshold value of when to kick a player based on the probability of using a VPN or Proxy (0.99+ is recommended)");
+	vpnWhitelist = (cvar_t*)Plugin_Cvar_RegisterBool("vpn_blocker_whitelist", qtrue, 0, "Enable or disable the use of the whitelist");
 
 	vpnThreshold->fmin = 0.0f;
 	vpnThreshold->fmax = 1.0f;
@@ -51,6 +54,12 @@ PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 
 	apiUrlParams = "&contact=" + vpnEmailStr + "&flags=" + vpnFlagStr;
 
+	qboolean whitelistEnabled = Plugin_Cvar_GetBoolean(vpnWhitelist);
+
+	if (whitelistEnabled == qtrue) {
+
+	}
+
 	return 0;
 }
 
@@ -64,6 +73,12 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 		std::string badAddressMsg = "Got a bad address when connecting, please try again!";
 		strncpy(message, badAddressMsg.c_str(), badAddressMsg.length() + 1);
 		return;
+	}
+
+	qboolean whitelistEnabled = Plugin_Cvar_GetBoolean(vpnWhitelist);
+
+	if (whitelistEnabled == qtrue) {
+
 	}
 
 	if (apiLimitReached) {
