@@ -14,25 +14,6 @@ bool apiLimitReached = false;
 std::int64_t apiCooldown = 3600000; //1 hour
 std::int64_t apiCooldownEnd;
 
-//Function to split string `str` using a given delimiter
-std::vector<std::string> Split(const std::string &str, char delim) {
-	int i = 0;
-	std::vector<std::string> list;
-
-	size_t pos = str.find(delim);
-
-	while (pos != std::string::npos)
-	{
-		list.push_back(str.substr(i, pos - i));
-		i = ++pos;
-		pos = str.find(delim, pos);
-	}
-
-	list.push_back(str.substr(i, str.length()));
-
-	return list;
-}
-
 PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	vpnEmail = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_email", "", 0, "Email address to be used with IP Intel API (https://getipintel.net/)I");
 	vpnFlags = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_flag", "m", 0, "Flag to be used with IP Intel API (https://getipintel.net/)");
@@ -84,15 +65,10 @@ PCL void OnPlayerConnect(int clientnum, netadr_t* netaddress, char* pbguid, char
 
 	char address[128];
 
-	Plugin_NET_AdrToStringMT(netaddress, address, sizeof(address));
+	Plugin_NET_AdrToStringShortMT(netaddress, address, sizeof(address));
 
 	std::string ip(address);
-	std::vector<std::string> ipData = Split(ip, ':');
-
-	if (ipData.empty())
-		return;
-
-	std::string url(apiUrl + ipData.front() + apiUrlParams);
+	std::string url(apiUrl + ip + apiUrlParams);
 
 	//Make GET Request to API
 	char data[8192];
