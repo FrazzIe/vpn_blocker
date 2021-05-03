@@ -93,15 +93,15 @@ PCL void OnPlayerConnect(int clientnum, netadr_t* netaddress, char* pbguid, char
 
 	//Get string response
 	std::string result(data);
-	float probability = NULL;
+	float probability = 2;
 
 	try {
 		probability = std::stof(result);
-	} catch(std::invalid_argument& e) {
+	} catch(...) {
 		Plugin_Printf("[VPN BLOCKER] Failed to convert request result");
 	}
 
-	if (probability == NULL)
+	if (probability == 2)
 		return;
 	return;
 }
