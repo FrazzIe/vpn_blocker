@@ -32,8 +32,8 @@ std::vector<std::string> Split(const std::string &str, char delim) {
 }
 
 PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
-	vpnEmail = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_email", "", 0, "");
-	vpnFlags = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_flag", "m", 0, "");
+	vpnEmail = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_email", "", 0, "Email address to be used with IP Intel AP (https://getipintel.net/)I");
+	vpnFlags = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_flag", "m", 0, "Flag to be used with IP Intel API (https://getipintel.net/)");
 
 	if (!vpnEmail->string[0]) {
 		Plugin_PrintError("Init failure. Cvar vpn_blocker_email is not set\n");
