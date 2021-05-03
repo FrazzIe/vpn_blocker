@@ -134,6 +134,15 @@ PCL void OnPlayerConnect(int clientnum, netadr_t* netaddress, char* pbguid, char
 
 		return;
 	}
+
+	if (probability >= 0.99f) {
+		int percentage = (int)(probability * 100);
+		char format[2048];
+
+		snprintf(format, strlen(vpnMsg->string) + 12, "%s [%i/100]", vpnMsg->string, percentage);
+		strncpy(deniedmsg, format, strlen(format) + 1);
+	}
+
 	return;
 }
 
