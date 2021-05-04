@@ -135,7 +135,8 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 	qboolean whitelistEnabled = Plugin_Cvar_GetBoolean(vpnWhitelist);
 
 	if (whitelistEnabled == qtrue) {
-
+		if (IsWhitelisted(baninfo->playerid))
+			return;
 	}
 
 	if (apiLimitReached) {
