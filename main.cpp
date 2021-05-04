@@ -11,11 +11,13 @@ cvar_t *vpnMsg;
 cvar_t *vpnThreshold;
 cvar_t *vpnWhitelist;
 cvar_t *vpnWhitelistFile;
+
 const std::string apiUrl("http://check.getipintel.net/check.php?ip=");
 std::string apiUrlParams;
 bool apiLimitReached = false;
 std::int64_t apiCooldown = 3600000; //1 hour
 std::int64_t apiCooldownEnd;
+
 std::unordered_set<std::uint64_t> whitelistSet;
 
 std::unordered_set<std::uint64_t> LoadWhitelist() {
