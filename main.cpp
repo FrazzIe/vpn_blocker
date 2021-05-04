@@ -309,8 +309,10 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 	if (probability >= vpnThreshold->value) {
 		int percentage = (int)(probability * 100);
 		char format[2048];
+		char tempId[128];
 
-		snprintf(format, strlen(vpnMsg->string) + 12, "%s [%i/100]", vpnMsg->string, percentage);
+		Plugin_SteamIDToString(baninfo->playerid, tempId, sizeof(tempId));
+		snprintf(format, strlen(vpnMsg->string) + strlen(tempId) + 24, "%s [%i/100] [ID: %s]", vpnMsg->string, percentage, tempId);
 		strncpy(message, format, strlen(format) + 1);
 		Plugin_Printf("[VPN BLOCKER] Removed %s [%llu] %i%c\n", baninfo->playername, baninfo->playerid, percentage, '%');
 	}
