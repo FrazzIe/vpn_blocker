@@ -29,7 +29,7 @@ std::unordered_set<std::uint64_t> LoadWhitelist() {
 	fileLength = Plugin_FS_SV_FOpenFileRead(vpnWhitelistFile->string, &fileHandle);
 
 	if (fileHandle == 0) {
-		Plugin_Printf("[VPN BLOCKER] Couldn't open %s, does it exist?\n", vpnWhitelistFile->string);
+		Plugin_PrintWarning("[VPN BLOCKER] Couldn't open %s, does it exist?\n", vpnWhitelistFile->string);
 		Plugin_FS_FCloseFile(fileHandle);
 		return idSet;
 	}
@@ -52,7 +52,7 @@ std::unordered_set<std::uint64_t> LoadWhitelist() {
 			Plugin_Printf("[VPN BLOCKER] %i lines parsed from %s\n", count, vpnWhitelistFile->string);
 			break;
 		} else if(line == -1) {
-			Plugin_Printf("[VPN BLOCKER] Could not read from %s\n", vpnWhitelistFile->string);
+			Plugin_PrintWarning("[VPN BLOCKER] Could not read from %s\n", vpnWhitelistFile->string);
 			break;
 		}
 
@@ -81,7 +81,7 @@ void SaveWhitelist() {
 	fileHandle = Plugin_FS_SV_FOpenFileWrite(tmpFile.c_str());
 
 	if (fileHandle == 0) {
-		Plugin_Printf("[VPN BLOCKER] Couldn't open %s\n", tmpFile.c_str());
+		Plugin_PrintError("[VPN BLOCKER] Couldn't open %s\n", tmpFile.c_str());
 		Plugin_FS_FCloseFile(fileHandle);
 		return;
 	}
@@ -295,7 +295,7 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 		return;
 
 	if (probability < 0) {
-		Plugin_Printf("[VPN BLOCKER] Got error code: %f, check https://getipintel.net/\n", probability);
+		Plugin_PrintWarning("[VPN BLOCKER] Got error code: %f, check https://getipintel.net/\n", probability);
 
 		if (resCode == 429) {
 			apiLimitReached = true;
