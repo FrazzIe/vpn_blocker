@@ -30,14 +30,12 @@ std::unordered_set<std::uint64_t> LoadWhitelist() {
 
 	if (fileHandle == 0) {
 		Plugin_Printf("[VPN BLOCKER] Couldn't open %s, does it exist?\n", vpnWhitelistFile->string);
-		Plugin_Cvar_SetBool(vpnWhitelist, qfalse);
 		Plugin_FS_FCloseFile(fileHandle);
 		return idSet;
 	}
 
 	if (fileLength < 1) {
 		Plugin_Printf("[VPN BLOCKER] Couldn't open %s because it's empty!\n", vpnWhitelistFile->string);
-		Plugin_Cvar_SetBool(vpnWhitelist, qfalse);
 		Plugin_FS_FCloseFile(fileHandle);
 		return idSet;
 	}
