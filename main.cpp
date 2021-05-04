@@ -144,10 +144,28 @@ void WhitelistCommand() {
 	std::string cmd(cmdName);
 
 	if (cmd == "vpn_whitelist_add") {
+		if (IsWhitelisted(targetPlayerId)) {
+			Plugin_Printf("[VPN BLOCKER] %s: Player is already whitelisted!\n", cmdName);
+			return;
+		}
 
-	} else if (cmd == "vpn_whitelist_remove") {
+		whitelistSet.insert(targetPlayerId);
 
+		Plugin_Printf("[VPN BLOCKER] %s: Player added to whitelist\n", cmdName);
 	}
+
+	if (cmd == "vpn_whitelist_remove") {
+		if (!IsWhitelisted(targetPlayerId)) {
+			Plugin_Printf("[VPN BLOCKER] %s: Player is not whitelisted!\n", cmdName);
+			return;
+		}
+
+		whitelistSet.erase(targetPlayerId);
+
+		Plugin_Printf("[VPN BLOCKER] %s: Player removed from whitelist\n", cmdName);
+	}
+
+	SaveWhitelist();
 }
 
 PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
