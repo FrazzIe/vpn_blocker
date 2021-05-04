@@ -12,6 +12,7 @@ cvar_t *vpnThreshold;
 cvar_t *vpnWhitelist;
 cvar_t *vpnWhitelistFile;
 
+const int cmdPower = 100;
 const std::string apiUrl("http://check.getipintel.net/check.php?ip=");
 std::string apiUrlParams;
 bool apiLimitReached = false;
@@ -130,6 +131,9 @@ PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	vpnThreshold = (cvar_t*)Plugin_Cvar_RegisterFloat("vpn_blocker_threshold", 0.99f, 0.0f, 1.0f, 0, "Threshold value of when to kick a player based on the probability of using a VPN or Proxy (0.99+ is recommended)");
 	vpnWhitelist = (cvar_t*)Plugin_Cvar_RegisterBool("vpn_blocker_whitelist", qtrue, 0, "Enable or disable the use of the whitelist");
 	vpnWhitelistFile = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_whitelist_file", "vpn_whitelist.dat", CVAR_INIT, "Name of file which holds the whitelist");
+
+	Plugin_AddCommand("vpn_whitelist_add", WhitelistCommand, cmdPower);
+	Plugin_AddCommand("vpn_whitelist_remove", WhitelistCommand, cmdPower);
 
 	vpnThreshold->fmin = 0.0f;
 	vpnThreshold->fmax = 1.0f;
