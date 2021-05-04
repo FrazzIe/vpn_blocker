@@ -312,6 +312,7 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 
 		snprintf(format, strlen(vpnMsg->string) + 12, "%s [%i/100]", vpnMsg->string, percentage);
 		strncpy(message, format, strlen(format) + 1);
+		Plugin_Printf("[VPN BLOCKER] Removed %s [%llu] %i\045\n", baninfo->playername, baninfo->playerid, percentage);
 	}
 
 	return;
