@@ -64,7 +64,7 @@ std::unordered_set<std::uint64_t> LoadWhitelist() {
 
 		//Plugin_Printf("[VPN BLOCKER] line %i contains %llu\n", count, id);
 
-		if (id !== 0) {
+		if (id != 0) {
 			idSet.insert(id);
 			count++;
 		}
