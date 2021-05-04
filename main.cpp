@@ -131,10 +131,10 @@ void WhitelistCommand() {
 
 	if (targetPlayerId == 0) {
 		if (targetPlayer == NULL) {
-			Plugin_Printf("[VPN BLOCKER] %s: Can't find player", cmdName);
+			Plugin_Printf("[VPN BLOCKER] %s: Can't find player\n", cmdName);
 			return;
 		} else if (targetPlayer->state < CS_ACTIVE) {
-			Plugin_Printf("[VPN BLOCKER] %s: Player isn't ready", cmdName);
+			Plugin_Printf("[VPN BLOCKER] %s: Player isn't ready\n", cmdName);
 			return;
 		}
 
