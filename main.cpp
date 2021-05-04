@@ -112,7 +112,7 @@ void WhitelistCommand() {
 			return;
 		}
 
-		targetPlayerId = targetPlayerId->playerid;
+		targetPlayerId = targetPlayer->playerid;
 	}
 
 	std::string cmd(cmdName);
