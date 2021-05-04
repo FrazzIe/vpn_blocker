@@ -77,6 +77,52 @@ bool IsWhitelisted(std::int64_t id) {
 	return whitelistSet.find(id) != whitelistSet.end();
 }
 
+void WhitelistCommand() {
+	int numArgs;
+	char *cmdName;
+	char *playerArg;
+	client_t *targetPlayer;
+	std::uint64_t targetPlayerId;
+
+	numArgs = Plugin_Cmd_Argc();
+
+	if (numArgs == 0)
+		return;
+
+	cmdName = Plugin_Cmd_Argv(0);
+
+	if (numArgs <= 1) {
+		Plugin_Printf("[VPN BLOCKER] Usage: %s <player>\n", cmdName);
+		return;
+	}
+
+	playerArg = Plugin_Cmd_Argv(1);
+	targetPlayerId = Plugin_StringToSteamID(playerArg);
+	targetPlayer = Plugin_SV_Cmd_GetPlayerClByHandle(playerArg);
+
+	//Plugin_Printf("[VPN BLOCKER] Player ID: %llu\n", targetPlayerId);
+
+	if (targetPlayerId == 0) {
+		if (targetPlayer == NULL) {
+			Plugin_Printf("[VPN BLOCKER] %s: Can't find player", cmdName);
+			return;
+		} else if (targetPlayer->state < CS_ACTIVE) {
+			Plugin_Printf("[VPN BLOCKER] %s: Player isn't ready", cmdName);
+			return;
+		}
+
+		targetPlayerId = targetPlayerId->playerid;
+	}
+
+	std::string cmd(cmdName);
+
+	if (cmd == "vpn_whitelist_add") {
+
+	} else if (cmd == "vpn_whitelist_remove") {
+
+	}
+}
+
 PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	vpnEmail = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_email", "", 0, "Email address to be used with IP Intel API (https://getipintel.net/)I");
 	vpnFlags = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_flag", "m", 0, "Flag to be used with IP Intel API (https://getipintel.net/)");
