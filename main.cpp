@@ -74,6 +74,32 @@ std::unordered_set<std::uint64_t> LoadWhitelist() {
 	return idSet;
 }
 
+void SaveWhitelist() {
+	fileHandle_t fileHandle;
+	std::string tmpFile(vpnWhitelistFile->string);
+	char buf[128];
+
+	tmpFile += ".tmp";
+	fileHandle = Plugin_FS_SV_FOpenFileWrite(tmpFile.c_str());
+
+	if (fileHandle == 0) {
+		Plugin_Printf("[VPN BLOCKER] Couldn't open %s\n", tmpFile.c_str());
+		Plugin_FS_FCloseFile(fileHandle);
+		return;
+	}
+
+	for (std::unordered_set<std::uint64_t>::iterator iter = whitelistSet.begin(); iter != whitelistSet.end(); ++iter) {
+		Plugin_SteamIDToString(*iter, buf, sizeof(buf));
+		std::string line(buf);
+		line += "\n";
+
+		Plugin_FS_Write(line.c_str(), line.length(), fileHandle);
+	}
+
+	Plugin_FS_FCloseFile(fileHandle);
+	Plugin_FS_SV_HomeCopyFile(strdup(tmpFile.c_str()), vpnWhitelistFile->string);
+}
+
 bool IsWhitelisted(std::int64_t id) {
 	return whitelistSet.find(id) != whitelistSet.end();
 }
