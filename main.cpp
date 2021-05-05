@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include <chrono>
-#include <unordered_set>
 
 cvar_t *vpnEmail;
 cvar_t *vpnFlags;
@@ -17,8 +16,6 @@ std::string apiUrlParams;
 bool apiLimitReached = false;
 std::int64_t apiCooldown = 3600000; //1 hour
 std::int64_t apiCooldownEnd;
-
-std::unordered_set<std::uint64_t> whitelistSet;
 
 PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	vpnEmail = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_email", "", 0, "Email address to be used with IP Intel API (https://getipintel.net/)I");
