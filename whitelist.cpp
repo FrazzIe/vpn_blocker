@@ -3,6 +3,7 @@
 #endif
 #include "whitelist.h"
 #include <unordered_set>
+#include <stdexcept>
 
 std::unordered_set<std::uint64_t> Whitelist::ids = {};
 cvar_t *Whitelist::enabled = NULL;
@@ -157,6 +158,9 @@ void Whitelist::SetEnabled(CONVAR_T* var) {
 }
 void Whitelist::SetFile(CONVAR_T* var) {
 	file = (cvar_t*)var;
+
+	if (!file->string[0])
+		throw std::invalid_argument("Init failure. Cvar vpn_blocker_whitelist_file is not set\n");
 }
 
 bool Whitelist::IsWhitelisted(std::int64_t id) {
