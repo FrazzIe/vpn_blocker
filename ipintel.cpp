@@ -19,7 +19,7 @@ void IPIntel::SetEmail(CONVAR_T* var) {
 		throw std::invalid_argument("Init failure. Cvar vpn_blocker_email is not set\n");
 
 	if (flag != NULL)
-		SetURLParams();
+		SetAPIParams();
 }
 
 void IPIntel::SetFlag(CONVAR_T* var) {
@@ -31,7 +31,7 @@ void IPIntel::SetFlag(CONVAR_T* var) {
 		throw std::invalid_argument("Init failure. Cvar vpn_blocker_flag is invalid (use m or b)\n");
 
 	if (email != NULL)
-		SetURLParams();
+		SetAPIParams();
 }
 
 void IPIntel::SetKickMessage(CONVAR_T* var) {
@@ -48,18 +48,18 @@ void IPIntel::SetThreshold(CONVAR_T* var) {
 	threshold->fmax = 1.0f;
 
 	if (threshold->value < threshold->fmin || threshold->value > threshold->fmax)
-		throw std::invalid_argument("Init failure. Cvar vpn_blocker_threshold must be between %f and %f\n", threshold->fmin, threshold->fmax);
+		throw std::invalid_argument("Init failure. Cvar vpn_blocker_threshold must be between 0.0 and 1.0\n");
 }
 
-void SetURLParams() {
+void IPIntel::SetAPIParams() {
 	std::string _email(email->string);
 	std::string _flag(flag->string);
-	url.params = "&contact=" + _email + "&flags=" + _flag;
+	API::params = "&contact=" + _email + "&flags=" + _flag;
 }
 
 IPResult IPIntel::Check(netadr_t addr) {
-	string::std _addr = GetAddress(addr);
-	string::std url = GetURL(_addr);
+	std::string _addr = GetAddress(addr);
+	std::string url = GetURL(_addr);
 
 	//Make GET Request to API
 	char data[8192];
@@ -70,12 +70,12 @@ IPResult IPIntel::Check(netadr_t addr) {
 
 	if (request == NULL) {
 		Plugin_Printf("[VPN BLOCKER] Request was NULL\n");
-		return;
+		return IPResult(2, 400);
 	}
 
 	if (request->code != 200 && request->contentLength <= 0) {
 		Plugin_Printf("[VPN BLOCKER] Request failed with code: %d\n", request->code);
-		return;
+		return IPResult(2, request->code);
 	}
 
 	//Get response
@@ -103,15 +103,19 @@ IPResult IPIntel::Check(netadr_t addr) {
 std::string IPIntel::GetAddress(netadr_t addr) {
 	char address[128];
 
-	Plugin_NET_AdrToStringShortMT(addr, address, sizeof(address));
+	Plugin_NET_AdrToStringShortMT(&addr, address, sizeof(address));
 
 	return std::string(address);
 }
 
 std::string IPIntel::GetURL(std::string addr) {
-	return api.url + addr + api.params;
+	return API::url + addr + API::params;
 }
 
-static bool ShouldKick(float probability) {
+char* IPIntel::GetKickMessage() {
+	return kickMsg->string;
+}
+
+bool IPIntel::ShouldKick(float probability) {
 	return probability >= threshold->value;
 }

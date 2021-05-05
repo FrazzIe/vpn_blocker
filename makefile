@@ -13,7 +13,7 @@ else
 	LIBS =
 endif
 
-all: main.cpp whitelist.cpp
+all: main.cpp whitelist.cpp ipintel.cpp
 	$(CC) $(CFLAGS) -c *.cpp
 	$(CC) $(LFLAGS) -o $(TARGET_NAME).$(EXT) *.o $(LIBS)
 clean:

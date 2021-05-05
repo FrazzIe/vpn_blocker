@@ -21,7 +21,7 @@ private:
 	static cvar_t *flag;
 	static cvar_t *kickMsg;
 	static cvar_t *threshold;
-	static struct API
+	struct API
 	{
 		static std::string url;
 		static std::string params;
@@ -31,10 +31,11 @@ public:
 	static void SetFlag(CONVAR_T* var);
 	static void SetKickMessage(CONVAR_T* var);
 	static void SetThreshold(CONVAR_T* var);
-	static void SetURLParams();
-	static float Check(netadr_t addr);
+	static void SetAPIParams();
+	static IPResult Check(netadr_t addr);
 	static std::string GetAddress(netadr_t addr);
 	static std::string GetURL(std::string addr);
+	static char* GetKickMessage();
 	static bool ShouldKick(float probability);
 };
 
