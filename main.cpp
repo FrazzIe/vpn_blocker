@@ -13,9 +13,6 @@ cvar_t *vpnThreshold;
 const int cmdPower = 100;
 const std::string apiUrl("http://check.getipintel.net/check.php?ip=");
 std::string apiUrlParams;
-bool apiLimitReached = false;
-std::int64_t apiCooldown = 3600000; //1 hour
-std::int64_t apiCooldownEnd;
 
 PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	vpnEmail = (cvar_t*)Plugin_Cvar_RegisterString("vpn_blocker_email", "", 0, "Email address to be used with IP Intel API (https://getipintel.net/)I");
@@ -87,14 +84,6 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 			return;
 	}
 
-	if (apiLimitReached) {
-		std::int64_t epochTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-		if (epochTime > apiCooldownEnd)
-			apiLimitReached = false;
-		else
-			return;
-	}
-
 	char address[128];
 
 	Plugin_NET_AdrToStringShortMT(&baninfo->adr, address, sizeof(address));
@@ -143,13 +132,6 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 
 	if (probability < 0) {
 		Plugin_PrintWarning("[VPN BLOCKER] Got error code: %f, check https://getipintel.net/\n", probability);
-
-		if (resCode == 429) {
-			apiLimitReached = true;
-			std::int64_t epochTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-			apiCooldownEnd = epochTime + apiCooldown;
-		}
-
 		return;
 	}
 
