@@ -39,4 +39,4 @@ public:
 	static bool ShouldKick(float probability);
 };
 
-#endif
+#endif // IPINTEL_H

@@ -22,4 +22,4 @@ public:
 	static bool IsFileSet();
 };
 
-#endif
+#endif // WHITELIST_H
