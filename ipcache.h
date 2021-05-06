@@ -20,7 +20,7 @@ private:
 public:
 	static void Insert(std::string addr, float probability);
 	static IPInfo Fetch(std::string addr);
-	static bool Cached(std::string addr);
+	static bool IsCached(std::string addr);
 };
 
 #endif // IPCACHE_H

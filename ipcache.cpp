@@ -19,6 +19,6 @@ IPInfo IPCache::Fetch(std::string addr) {
 	return ipMap.at(addr);
 }
 
-bool IPCache::Cached(std::string addr) {
+bool IPCache::IsCached(std::string addr) {
 	return ipMap.find(addr) != ipMap.end();
 }
