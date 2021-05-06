@@ -1,6 +1,7 @@
 #include "../pinc.h"
 #include "whitelist.h"
 #include "ipintel.h"
+#include "ipcache.h"
 
 #include <string>
 #include <stdexcept>
@@ -45,8 +46,20 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 	}
 
 	std::string addr = IPIntel::GetAddress(addr);
+	bool isCached = IPCache::IsCached(addr);
+	bool shouldUpdate = false;
+	IPInfo cacheEntry;
+	IPResult result;
 
-	IPResult result = IPIntel::Check(addr);
+	if (isCached) {
+		cacheEntry = IPCache::Fetch(addr);
+		shouldUpdate = IPCache::ShouldUpdate(cacheEntry.lastChecked);
+	}
+
+	if (!shouldUpdate)
+		result = IPResult(cacheEntry.probability, 200);
+	else
+		result = IPIntel::Check(addr);
 
 	if (result.probability == 2)
 		return;
