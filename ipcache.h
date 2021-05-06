@@ -24,7 +24,7 @@ private:
 	static int queryLength = 0;
 public:
 	static void Insert(std::string addr, float probability);
-	static IPInfo Fetch(std::string addr);
+	static IPInfo& Fetch(std::string addr);
 	static bool IsCached(std::string addr);
 	static bool ShouldUpdate(int64_t lastChecked);
 };
