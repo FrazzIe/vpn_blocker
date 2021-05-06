@@ -44,7 +44,9 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 			return;
 	}
 
-	IPResult result = IPIntel::Check(baninfo->adr);
+	std::string addr = IPIntel::GetAddress(addr);
+
+	IPResult result = IPIntel::Check(addr);
 
 	if (result.probability == 2)
 		return;

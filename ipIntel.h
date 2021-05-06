@@ -32,7 +32,7 @@ public:
 	static void SetKickMessage(CONVAR_T* var);
 	static void SetThreshold(CONVAR_T* var);
 	static void SetAPIParams();
-	static IPResult Check(netadr_t addr);
+	static IPResult Check(std::string addr);
 	static std::string GetAddress(netadr_t addr);
 	static std::string GetURL(std::string addr);
 	static char* GetKickMessage();

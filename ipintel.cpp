@@ -57,9 +57,8 @@ void IPIntel::SetAPIParams() {
 	API::params = "&contact=" + _email + "&flags=" + _flag;
 }
 
-IPResult IPIntel::Check(netadr_t addr) {
-	std::string _addr = GetAddress(addr);
-	std::string url = GetURL(_addr);
+IPResult IPIntel::Check(std::string addr) {
+	std::string url = GetURL(addr);
 
 	//Make GET Request to API
 	char data[8192];
