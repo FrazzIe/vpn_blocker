@@ -5,8 +5,6 @@
 #include <string>
 #include <stdexcept>
 
-const int cmdPower = 100;
-
 PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	try {
 		IPIntel::SetEmail(Plugin_Cvar_RegisterString("vpn_blocker_email", "", 0, "Email address to be used with IP Intel API (https://getipintel.net/)"));
@@ -20,8 +18,8 @@ PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 		return -1;
 	}
 
-	Plugin_AddCommand("vpn_whitelist_add", Whitelist::CommandHandler, cmdPower);
-	Plugin_AddCommand("vpn_whitelist_remove", Whitelist::CommandHandler, cmdPower);
+	Plugin_AddCommand("vpn_whitelist_add", Whitelist::CommandHandler, Whitelist::cmdPower);
+	Plugin_AddCommand("vpn_whitelist_remove", Whitelist::CommandHandler, Whitelist::cmdPower);
 
 	if (Whitelist::IsEnabled())
 		Whitelist::Load();
