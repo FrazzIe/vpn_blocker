@@ -81,8 +81,12 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 		Plugin_Printf("[VPN BLOCKER] Removed %s [%llu] %i%c\n", baninfo->playername, baninfo->playerid, percentage, '%');
 	}
 
-	if (shouldUpdate)
-		IPCache::Insert(addr, result.probability);
+	if (shouldUpdate) {
+		if (isCached)
+			IPCache::Update(cacheEntry, result.probability);
+		else
+			IPCache::Insert(addr, result.probability);
+	}
 
 	return;
 }

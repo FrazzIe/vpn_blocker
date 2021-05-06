@@ -15,6 +15,11 @@ void IPCache::Insert(std::string addr, float probability) {
 	ipMap.insert(addr, IPInfo(probability, GetSystemEpoch() + cacheLength));
 }
 
+void IPCache::Update(IPInfo &entry, float probability) {
+	entry.probability = probability;
+	entry.lastChecked = GetSystemEpoch() + cacheLength;
+}
+
 IPInfo& IPCache::Fetch(std::string addr) {
 	return ipMap.at(addr);
 }
