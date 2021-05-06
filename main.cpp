@@ -3,13 +3,7 @@
 #include "ipintel.h"
 
 #include <string>
-#include <vector>
 #include <stdexcept>
-
-cvar_t *vpnEmail;
-cvar_t *vpnFlags;
-cvar_t *vpnMsg;
-cvar_t *vpnThreshold;
 
 const int cmdPower = 100;
 
