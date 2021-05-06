@@ -3,11 +3,16 @@
 #endif
 #include "ipcache.h"
 #include <string>
+#include <chrono>
+
+int64_t getSystemEpoch() {
+	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+}
 
 std::unordered_map<std::string, IPInfo> IPCache::ipMap = {};
 
 void IPCache::Insert(std::string addr, float probability) {
-	ipMap.insert(addr, IPInfo(probability, 0));
+	ipMap.insert(addr, IPInfo(probability, getSystemEpoch() + cacheLength));
 }
 
 IPInfo IPCache::Fetch(std::string addr) {
