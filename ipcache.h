@@ -12,7 +12,7 @@ struct IPInfo {
 
 	IPInfo(float _probability, int64_t _lastChecked) {
 		probability = _probability;
-		code = _lastChecked;
+		lastChecked = _lastChecked;
 	}
 };
 
