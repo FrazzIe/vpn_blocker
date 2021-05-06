@@ -5,12 +5,12 @@
 #include <unordered_set>
 #include <stdexcept>
 
-std::unordered_set<std::uint64_t> Whitelist::ids = {};
+std::unordered_set<uint64_t> Whitelist::ids = {};
 cvar_t *Whitelist::enabled = NULL;
 cvar_t *Whitelist::file = NULL;
 
 void Whitelist::Load() {
-	std::unordered_set<std::uint64_t> idSet = {};
+	std::unordered_set<uint64_t> idSet = {};
 	fileHandle_t fileHandle;
 	long fileLength;
 
@@ -48,7 +48,7 @@ void Whitelist::Load() {
 
 		//Plugin_Printf("[VPN BLOCKER] line %i contains %s\n", count, buf);
 
-		std::uint64_t id = Plugin_StringToSteamID(buf);
+		uint64_t id = Plugin_StringToSteamID(buf);
 
 		//Plugin_Printf("[VPN BLOCKER] line %i contains %llu\n", count, id);
 
@@ -77,7 +77,7 @@ void Whitelist::Save() {
 		return;
 	}
 
-	for (std::unordered_set<std::uint64_t>::iterator iter = ids.begin(); iter != ids.end(); ++iter) {
+	for (std::unordered_set<uint64_t>::iterator iter = ids.begin(); iter != ids.end(); ++iter) {
 		Plugin_SteamIDToString(*iter, buf, sizeof(buf));
 		std::string line(buf);
 		line += "\n";
@@ -94,7 +94,7 @@ void Whitelist::CommandHandler() {
 	char *cmdName;
 	char *playerArg;
 	client_t *targetPlayer;
-	std::uint64_t targetPlayerId;
+	uint64_t targetPlayerId;
 
 	numArgs = Plugin_Cmd_Argc();
 
@@ -163,7 +163,7 @@ void Whitelist::SetFile(CONVAR_T* var) {
 		throw std::invalid_argument("Init failure. Cvar vpn_blocker_whitelist_file is not set\n");
 }
 
-bool Whitelist::IsWhitelisted(std::int64_t id) {
+bool Whitelist::IsWhitelisted(uint64_t id) {
 	return ids.find(id) != ids.end();
 }
 

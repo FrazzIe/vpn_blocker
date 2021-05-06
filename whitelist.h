@@ -7,7 +7,7 @@
 
 class Whitelist {
 private:
-	static std::unordered_set<std::uint64_t> ids;
+	static std::unordered_set<uint64_t> ids;
 	static cvar_t *enabled;
 	static cvar_t *file;
 public:
@@ -17,7 +17,7 @@ public:
 	static void CommandHandler();
 	static void SetEnabled(CONVAR_T* var);
 	static void SetFile(CONVAR_T* var);
-	static bool IsWhitelisted(std::int64_t id);
+	static bool IsWhitelisted(uint64_t id);
 	static bool IsEnabled();
 	static bool IsFileSet();
 };
