@@ -22,3 +22,7 @@ IPInfo IPCache::Fetch(std::string addr) {
 bool IPCache::IsCached(std::string addr) {
 	return ipMap.find(addr) != ipMap.end();
 }
+
+bool IPCache::ShouldUpdate(int64_t lastChecked) {
+	return GetSystemEpoch() > lastChecked;
+}
