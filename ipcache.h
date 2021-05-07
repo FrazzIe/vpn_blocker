@@ -21,7 +21,7 @@ private:
 	static std::unordered_map<std::string, IPInfo> ipMap;
 	static const int64_t cacheLength = 21600000; //6 Hours
 	static const int queryLengthMax = 500;
-	static int queryLength = 0;
+	static int queryLength;
 public:
 	static void Insert(std::string addr, float probability);
 	static void Update(IPInfo &entry);
