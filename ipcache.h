@@ -10,13 +10,11 @@ struct IPInfo {
 	float probability;
 	int64_t lastChecked;
 
-	IPInfo() {
-		probability = 2;
-		lastChecked = 0;
+	IPInfo() : probability(2), lastChecked(0) {
+
 	}
-	IPInfo(float _probability, int64_t _lastChecked) {
-		probability = _probability;
-		lastChecked = _lastChecked;
+	IPInfo(float _probability, int64_t _lastChecked) : probability(_probability), lastChecked(_lastChecked) {
+
 	}
 };
 

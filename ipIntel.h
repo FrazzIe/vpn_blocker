@@ -9,13 +9,11 @@ struct IPResult {
 	float probability;
 	int code;
 
-	IPResult() {
-		probability = 2;
-		code = 200;
+	IPResult() : probability(2), code(200) {
+
 	}
-	IPResult(float _probability, int _code) {
-		probability = _probability;
-		code = _code;
+	IPResult(float _probability, int _code) : probability(_probability), code(_code) {
+
 	}
 };
 
