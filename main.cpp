@@ -6,6 +6,12 @@
 #include <string>
 #include <stdexcept>
 
+#define PLUGIN_NAME "VPN Blocker"
+#define PLUGIN_DESC "Prevent VPN usage by player"
+#define PLUGIN_DESC_LONG "Prevent players joining that are using a VPN by using the IP Intelligence API"
+#define PLUGIN_VER_MAJ 0
+#define PLUGIN_VER_MIN 2
+
 PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	try {
 		IPIntel::SetEmail(Plugin_Cvar_RegisterString("vpn_blocker_email", "", 0, "Email address to be used with IP Intel API (https://getipintel.net/)"));
@@ -96,10 +102,10 @@ PCL void OnInfoRequest(pluginInfo_t *info) { //Function used to obtain informati
 	info->handlerVersion.major = PLUGIN_HANDLER_VERSION_MAJOR;
 	info->handlerVersion.minor = PLUGIN_HANDLER_VERSION_MINOR;
 
-	info->pluginVersion.major = 0;
-	info->pluginVersion.minor = 2; //Plugin version
+	info->pluginVersion.major = PLUGIN_VER_MAJ;
+	info->pluginVersion.minor = PLUGIN_VER_MIN; //Plugin version
 
-	strncpy(info->fullName, "VPN Blocker", sizeof(info->fullName)); //Full plugin name
-	strncpy(info->shortDescription, "Prevent VPN usage by player", sizeof(info->shortDescription)); //Short plugin description
-	strncpy(info->longDescription, "Prevent players joining that are using a VPN by using the IP Intelligence API", sizeof(info->longDescription)); //Long plugin description
+	strncpy(info->fullName, PLUGIN_NAME, sizeof(info->fullName)); //Full plugin name
+	strncpy(info->shortDescription, PLUGIN_DESC, sizeof(info->shortDescription)); //Short plugin description
+	strncpy(info->longDescription, PLUGIN_DESC_LONG, sizeof(info->longDescription)); //Long plugin description
 }
