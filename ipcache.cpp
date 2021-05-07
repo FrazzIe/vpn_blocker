@@ -12,6 +12,14 @@ int64_t GetSystemEpoch() {
 std::unordered_map<std::string, IPInfo> IPCache::ipMap = {};
 cvar_t *IPCache::file = NULL;
 
+void IPCache::Load() {
+
+}
+
+void IPCache::Save() {
+
+}
+
 void IPCache::SetFile(CONVAR_T* var) {
 	file = (cvar_t*)var;
 

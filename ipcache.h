@@ -26,6 +26,8 @@ private:
 	static const int64_t cacheLength = 21600000; //6 Hours
 	static cvar_t *file;
 public:
+	static void Load();
+	static void Save();
 	static void SetFile(CONVAR_T* var);
 	static void Insert(std::string addr, float probability);
 	static void Update(IPInfo &entry, float probability);
