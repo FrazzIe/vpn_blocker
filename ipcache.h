@@ -21,17 +21,17 @@ struct IPInfo {
 
 class IPCache {
 private:
-	static std::unordered_map<std::string, IPInfo> ipMap;
+	static std::unordered_map<uint64_t, IPInfo> ipMap;
 	static const int64_t cacheLength = 21600000; //6 Hours
 	static cvar_t *file;
 public:
 	static void Load();
 	static void Save();
 	static void SetFile(CONVAR_T* var);
-	static void Insert(std::string addr, float probability);
+	static void Insert(uint64_t addr, float probability);
 	static void Update(IPInfo &entry, float probability);
-	static IPInfo& Fetch(std::string addr);
-	static bool IsCached(std::string addr);
+	static IPInfo& Fetch(uint64_t addr);
+	static bool IsCached(uint64_t addr);
 	static bool ShouldUpdate(int64_t lastChecked);
 };
 

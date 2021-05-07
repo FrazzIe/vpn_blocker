@@ -52,16 +52,17 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 			return;
 	}
 
-	bool isCached = IPCache::IsCached(addr);
 	std::string addr = IPIntel::GetAddress(baninfo->adr);
 	uint64_t addrNum = 	IPIntel::GetAddress(addr);
+	bool isCached = IPCache::IsCached(addrNum);
 	bool shouldUpdate = true;
 	IPInfo cacheEntry;
 	IPResult result;
 
 	if (isCached) {
-		cacheEntry = IPCache::Fetch(addr);
+		cacheEntry = IPCache::Fetch(addrNum);
 		shouldUpdate = IPCache::ShouldUpdate(cacheEntry.lastChecked);
+		Plugin_Printf("Found %s cache entry containing (p->%f, t->%llu, u->%i)", addr.c_str(), cacheEntry.probability, cacheEntry.lastChecked, shouldUpdate);
 	}
 
 	if (!shouldUpdate)
@@ -93,7 +94,7 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 		if (isCached)
 			IPCache::Update(cacheEntry, result.probability);
 		else
-			IPCache::Insert(addr, result.probability);
+			IPCache::Insert(addrNum, result.probability);
 	}
 
 	return;
