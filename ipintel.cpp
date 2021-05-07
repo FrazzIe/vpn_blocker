@@ -107,6 +107,12 @@ std::string IPIntel::GetAddress(netadr_t addr) {
 	return std::string(address);
 }
 
+uint64_t IPIntel::GetAddress(const char* addr) {
+	unsigned int b0, b1, b2, b3;
+	sscanf(addr, "%u.%u.%u.%u", &b0, &b1, &b2, &b3);
+	return (b3 << 24) + (b2 << 16) + (b1 << 8) + b0;
+}
+
 std::string IPIntel::GetURL(std::string addr) {
 	return API::url + addr + API::params;
 }

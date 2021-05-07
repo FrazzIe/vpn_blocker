@@ -52,8 +52,9 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 			return;
 	}
 
-	std::string addr = IPIntel::GetAddress(addr);
 	bool isCached = IPCache::IsCached(addr);
+	std::string addr = IPIntel::GetAddress(baninfo->adr);
+	uint64_t addrNum = 	IPIntel::GetAddress(addr);
 	bool shouldUpdate = true;
 	IPInfo cacheEntry;
 	IPResult result;

@@ -37,6 +37,7 @@ public:
 	static void SetAPIParams();
 	static IPResult Check(std::string addr);
 	static std::string GetAddress(netadr_t addr);
+	static uint64_t GetAddress(const char *addr);
 	static std::string GetURL(std::string addr);
 	static char* GetKickMessage();
 	static bool ShouldKick(float probability);
