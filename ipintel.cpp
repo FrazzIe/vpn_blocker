@@ -100,7 +100,7 @@ IPResult IPIntel::Check(std::string addr) {
 }
 
 std::string IPIntel::GetAddress(netadr_t addr) {
-	char address[128];
+	char address[15];
 
 	Plugin_NET_AdrToStringShortMT(&addr, address, sizeof(address));
 
