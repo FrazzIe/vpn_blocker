@@ -10,7 +10,6 @@ int64_t GetSystemEpoch() {
 }
 
 std::unordered_map<std::string, IPInfo> IPCache::ipMap = {};
-int IPCache::queryLength = 0;
 
 void IPCache::Insert(std::string addr, float probability) {
 	ipMap.insert(std::make_pair(addr, IPInfo(probability, GetSystemEpoch() + cacheLength)));
