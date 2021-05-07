@@ -32,6 +32,7 @@ PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	if (Whitelist::IsEnabled())
 		Whitelist::Load();
 
+	IPCache::Load();
 	return 0;
 }
 
