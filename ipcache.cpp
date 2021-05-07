@@ -68,7 +68,33 @@ void IPCache::Load() {
 }
 
 void IPCache::Save() {
+	fileHandle_t fileHandle;
+	std::string tmpFile(file->string);
 
+	tmpFile += ".tmp";
+	fileHandle = Plugin_FS_SV_FOpenFileWrite(tmpFile.c_str());
+
+	if (fileHandle == 0) {
+		Plugin_PrintError("[VPN BLOCKER] Couldn't open %s\n", tmpFile.c_str());
+		Plugin_FS_FCloseFile(fileHandle);
+		return;
+	}
+
+	IPFileHeader header;
+	header.size = ipMap.size();
+
+	Plugin_FS_Write(&header, sizeof(IPFileHeader), fileHandle);
+
+	for (std::pair<uint64_t, IPInfo> entry : ipMap) {
+		Plugin_FS_Write(&entry.first, sizeof(uint64_t), fileHandle);
+		Plugin_FS_Write(&entry.second.probability, sizeof(float), fileHandle);
+		Plugin_FS_Write(&entry.second.lastChecked, sizeof(int64_t), fileHandle);
+
+		//Plugin_Printf("Stored %llu with %f and %lld from entry %llu\n", entry.first, entry.second.probability, entry.second.lastChecked);
+	}
+
+	Plugin_FS_FCloseFile(fileHandle);
+	Plugin_FS_SV_HomeCopyFile(strdup(tmpFile.c_str()), file->string);
 }
 
 void IPCache::SetFile(CONVAR_T* var) {
