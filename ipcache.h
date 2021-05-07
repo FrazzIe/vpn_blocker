@@ -6,6 +6,8 @@
 #include <string>
 #include <unordered_map>
 
+#define IP_FILE_HEADER_VER 1
+
 struct IPInfo {
 	float probability;
 	int64_t lastChecked;
@@ -16,6 +18,15 @@ struct IPInfo {
 	IPInfo(float _probability, int64_t _lastChecked) {
 		probability = _probability;
 		lastChecked = _lastChecked;
+	}
+};
+
+struct IPFileHeader {
+	uint64_t size;
+	int ver;
+
+	IPFileHeader() : size(0), ver(IP_FILE_HEADER_VER) {
+
 	}
 };
 
