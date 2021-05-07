@@ -12,8 +12,9 @@ struct IPResult {
 	IPResult() : probability(2), code(200) {
 
 	}
-	IPResult(float _probability, int _code) : probability(_probability), code(_code) {
-
+	IPResult(float _probability, int _code) {
+		probability = _probability;
+		code = _code;
 	}
 };
 
