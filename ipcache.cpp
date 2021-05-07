@@ -10,6 +10,14 @@ int64_t GetSystemEpoch() {
 }
 
 std::unordered_map<std::string, IPInfo> IPCache::ipMap = {};
+cvar_t *IPCache::file = NULL;
+
+void IPCache::SetFile(CONVAR_T* var) {
+	file = (cvar_t*)var;
+
+	if (!file->string[0])
+		throw std::invalid_argument("Init failure. Cvar vpn_blocker_cache_file is not set\n");
+}
 
 void IPCache::Insert(std::string addr, float probability) {
 	ipMap.insert(std::make_pair(addr, IPInfo(probability, GetSystemEpoch() + cacheLength)));
