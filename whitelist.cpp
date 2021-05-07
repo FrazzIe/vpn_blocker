@@ -156,6 +156,7 @@ void Whitelist::CommandHandler() {
 void Whitelist::SetEnabled(CONVAR_T* var) {
 	enabled = (cvar_t*)var;
 }
+
 void Whitelist::SetFile(CONVAR_T* var) {
 	file = (cvar_t*)var;
 
