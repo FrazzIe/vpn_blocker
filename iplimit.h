@@ -22,11 +22,14 @@ private:
 	static uint32_t count;
 	static time_t reset;
 public:
+	static const int cmdPower = 100;
+public:
 	static void Load();
 	static void Save();
 	static void Create();
 	static void SetFile(CONVAR_T* var);
 	static void Increase();
+	static void CommandHandler();
 	static bool ReachedLimit();
 	static bool TryReset();
 };

@@ -30,6 +30,7 @@ PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 
 	Plugin_AddCommand("vpn_whitelist_add", Whitelist::CommandHandler, Whitelist::cmdPower);
 	Plugin_AddCommand("vpn_whitelist_remove", Whitelist::CommandHandler, Whitelist::cmdPower);
+	Plugin_AddCommand("vpn_limit_info", IPLimit::CommandHandler, IPLimit::cmdPower);
 
 	if (Whitelist::IsEnabled())
 		Whitelist::Load();

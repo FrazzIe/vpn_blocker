@@ -128,6 +128,25 @@ void IPLimit::Increase() {
 	}
 }
 
+void IPLimit::CommandHandler() {
+	int numArgs;
+	char *cmdName;
+
+	numArgs = Plugin_Cmd_Argc();
+
+	if (numArgs == 0)
+		return;
+
+	cmdName = Plugin_Cmd_Argv(0);
+
+	std::string cmd(cmdName);
+
+	if (cmd == "vpn_limit_info") {
+		time_t _reset = reset;
+		Plugin_Printf("[VPN BLOCKER] Request count: %u/%u, Reset at: %s\n", count, limit, asctime(localtime(&_reset)));
+	}
+}
+
 bool IPLimit::ReachedLimit() {
 	return count >= limit;
 }
