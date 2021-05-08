@@ -117,7 +117,7 @@ void IPLimit::SetFile(CONVAR_T* var) {
 		throw std::invalid_argument("Init failure. Cvar vpn_blocker_limit_file is not set\n");
 }
 
-void Increase() {
+void IPLimit::Increase() {
 	if (count != limit)
 		count++;
 }
