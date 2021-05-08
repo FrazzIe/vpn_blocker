@@ -12,6 +12,7 @@ private:
 	static cvar_t *file;
 public:
 	static const int cmdPower = 100;
+public:
 	static void Load();
 	static void Save();
 	static void CommandHandler();
