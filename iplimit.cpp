@@ -7,6 +7,7 @@
 
 cvar_t *IPLimit::file = NULL;
 int IPLimit::count = 0;
+time_t IPLimit::reset = 0;
 void IPLimit::Load() {
 
 }
