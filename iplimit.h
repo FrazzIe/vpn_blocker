@@ -7,6 +7,8 @@
 class IPLimit {
 private:
 	static cvar_t *file;
+	static const int limit = 500;
+	static int count;
 public:
 	static void Load();
 	static void Save();

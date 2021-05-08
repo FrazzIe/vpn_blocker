@@ -6,6 +6,7 @@
 #include <time.h>
 
 cvar_t *IPLimit::file = NULL;
+int IPLimit::count = 0;
 void IPLimit::Load() {
 
 }
