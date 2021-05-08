@@ -112,6 +112,7 @@ void IPCache::Insert(uint64_t addr, float probability) {
 void IPCache::Update(IPInfo &entry, float probability) {
 	entry.probability = probability;
 	entry.lastChecked = GetSystemEpoch() + cacheLength;
+	Save();
 }
 
 IPInfo& IPCache::Fetch(uint64_t addr) {
