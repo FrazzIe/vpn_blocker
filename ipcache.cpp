@@ -4,6 +4,7 @@
 #include "ipcache.h"
 #include <string>
 #include <chrono>
+#include <math.h>
 
 int64_t GetSystemEpoch() {
 	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -113,6 +114,39 @@ void IPCache::Update(IPInfo &entry, float probability) {
 	entry.probability = probability;
 	entry.lastChecked = GetSystemEpoch() + cacheLength;
 	Save();
+}
+
+void IPCache::CommandHandler() {
+	int numArgs;
+	char *cmdName;
+
+	numArgs = Plugin_Cmd_Argc();
+
+	if (numArgs == 0)
+		return;
+
+	cmdName = Plugin_Cmd_Argv(0);
+
+	std::string cmd(cmdName);
+
+	if (cmd == "vpn_cache_info") {
+		int64_t curTime = GetSystemEpoch();
+		uint64_t lastChecked = 0;
+		uint64_t count = 0;
+		uint32_t hour, minute;
+
+		for (std::pair<uint64_t, IPInfo> entry : ipMap) {
+			lastChecked = ((curTime - (entry.second.lastChecked - cacheLength)) * 0.001) / 60;
+			minute = floor(lastChecked % 60);
+			lastChecked /= 60;
+			hour = floor(lastChecked % 24);
+
+			Plugin_Printf("[VPN BLOCKER] %llu - Probability: %f, Last checked: %u %s, %u %s ago\n", entry.first, entry.second.probability, hour, (hour > 1) ? "hrs" : "hr", minute, (minute > 1) ? "mins" : "min");
+			count++;
+		}
+
+		Plugin_Printf("[VPN BLOCKER] %llu cache entries\n", count);
+	}
 }
 
 IPInfo& IPCache::Fetch(uint64_t addr) {

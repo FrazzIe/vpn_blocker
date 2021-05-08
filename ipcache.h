@@ -36,11 +36,14 @@ private:
 	static const int64_t cacheLength = 21600000; //6 Hours
 	static cvar_t *file;
 public:
+	static const int cmdPower = 100;
+public:
 	static void Load();
 	static void Save();
 	static void SetFile(CONVAR_T* var);
 	static void Insert(uint64_t addr, float probability);
 	static void Update(IPInfo &entry, float probability);
+	static void CommandHandler();
 	static IPInfo& Fetch(uint64_t addr);
 	static bool IsCached(uint64_t addr);
 	static bool ShouldUpdate(int64_t lastChecked);
