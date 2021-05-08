@@ -33,15 +33,19 @@ time_t GetUTCEpoch() {
 time_t GetResetEpoch() {
 	time_t t = time(NULL);
 	struct tm *tInfo = gmtime(&t);
-	int hour = isDST(tInfo) ? 4 : 5;
-	if (tInfo->tm_hour >= hour)
-		tInfo->tm_mday++;
-	tInfo->tm_hour = hour;
-	tInfo->tm_min = 0;
-	tInfo->tm_sec = 0;
-	tInfo->tm_isdst = -1;
+	bool offsetDST = isDST(tInfo);
+	int hoursToAdd = offsetDST ? 4 : 5;
 
-	return mktime(tInfo);
+	//Strip h/m/s
+	t -= (tInfo->tm_hour * 3600);
+	t -= (tInfo->tm_min * 60);
+	t -= tInfo->tm_sec;
+
+	//Adjust
+	t += hoursToAdd * 3600;
+	if (tInfo->tm_hour >= hoursToAdd)
+		t += 86400;
+	return t;
 }
 
 void IPLimit::Load() {
