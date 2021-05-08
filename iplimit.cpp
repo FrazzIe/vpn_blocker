@@ -8,6 +8,12 @@
 cvar_t *IPLimit::file = NULL;
 int IPLimit::count = 0;
 time_t IPLimit::reset = 0;
+
+time_t GetUTCEpoch() {
+	time_t t = time(NULL);
+	gmtime(&t);
+	return t;
+}
 void IPLimit::Load() {
 
 }
