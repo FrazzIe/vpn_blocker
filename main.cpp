@@ -2,6 +2,7 @@
 #include "whitelist.h"
 #include "ipintel.h"
 #include "ipcache.h"
+#include "iplimit.h"
 
 #include <string>
 #include <stdexcept>
@@ -21,6 +22,7 @@ PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 		Whitelist::SetEnabled(Plugin_Cvar_RegisterBool("vpn_blocker_whitelist", qtrue, 0, "Enable or disable the use of the whitelist"));
 		Whitelist::SetFile(Plugin_Cvar_RegisterString("vpn_blocker_whitelist_file", "vpn_whitelist.dat", CVAR_INIT, "Name of file which holds the whitelist"));
 		IPCache::SetFile(Plugin_Cvar_RegisterString("vpn_blocker_cache_file", "vpn_cache.bin", CVAR_INIT, "Name of file which holds the cache"));
+		IPLimit::SetFile(Plugin_Cvar_RegisterString("vpn_blocker_limit_file", "vpn_limit.bin", CVAR_INIT, "Name of file which holds the api limit info"));
 	} catch(const std::invalid_argument& e) {
 		Plugin_PrintError(e.what());
 		return -1;
