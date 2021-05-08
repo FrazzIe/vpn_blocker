@@ -74,7 +74,7 @@ void IPLimit::Load() {
 	Plugin_FS_Read(&count, sizeof(uint32_t), fileHandle);
 	Plugin_FS_Read(&reset, sizeof(time_t), fileHandle);
 
-	Plugin_Printf("Got limit info (count: %u, reset: %llu)\n", count, (uint64_t)reset);
+	//Plugin_Printf("Got limit info (count: %u, reset: %llu)\n", count, (uint64_t)reset);
 
 	Plugin_FS_FCloseFile(fileHandle);
 
@@ -101,7 +101,7 @@ void IPLimit::Save() {
 	Plugin_FS_Write(&count, sizeof(uint32_t), fileHandle);
 	Plugin_FS_Write(&reset, sizeof(time_t), fileHandle);
 
-	Plugin_Printf("Stored limit info (count: %u, reset: %llu)\n", count, (uint64_t)reset);
+	//Plugin_Printf("Stored limit info (count: %u, reset: %llu)\n", count, (uint64_t)reset);
 
 	Plugin_FS_FCloseFile(fileHandle);
 	Plugin_FS_SV_HomeCopyFile(strdup(tmpFile.c_str()), file->string);
