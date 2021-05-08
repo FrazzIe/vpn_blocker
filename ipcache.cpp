@@ -41,11 +41,11 @@ void IPCache::Load() {
 		return;
 	}
 
-	if (header.ver != IPCACHE_FILE_HEADER_VER) {
-		Plugin_Printf("[VPN BLOCKER] Couldn't read %s, unsupported format\n", file->string);
-		Plugin_FS_FCloseFile(fileHandle);
-		return;
-	}
+	// if (header.ver != IPCACHE_FILE_HEADER_VER) {
+	// 	Plugin_Printf("[VPN BLOCKER] Couldn't read %s, unsupported format (%i != %i)\n", file->string, header.ver, IPCACHE_FILE_HEADER_VER);
+	// 	Plugin_FS_FCloseFile(fileHandle);
+	// 	return;
+	// }
 
 	int64_t curTime = GetSystemEpoch();
 
