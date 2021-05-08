@@ -4,6 +4,17 @@
 #include "../pinc.h"
 #endif
 
+#define IPLIMIT_FILE_HEADER_VER 1
+
+struct IPLimitFileHeader {
+	int ver;
+
+	IPLimitFileHeader() : ver(IPLIMIT_FILE_HEADER_VER) {
+
+	}
+};
+
+
 class IPLimit {
 private:
 	static cvar_t *file;
