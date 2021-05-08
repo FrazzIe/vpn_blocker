@@ -50,15 +50,9 @@ void IPLimit::Load() {
 
 	fileLength = Plugin_FS_SV_FOpenFileRead(file->string, &fileHandle);
 
-	if (fileHandle == 0) {
-		Plugin_PrintWarning("[VPN BLOCKER] Couldn't open %s, does it exist?\n", file->string);
+	if (fileHandle == 0 || fileLength < 1) {
 		Plugin_FS_FCloseFile(fileHandle);
-		return;
-	}
-
-	if (fileLength < 1) {
-		Plugin_Printf("[VPN BLOCKER] Couldn't open %s because it's empty!\n", file->string);
-		Plugin_FS_FCloseFile(fileHandle);
+		Create();
 		return;
 	}
 
@@ -67,22 +61,20 @@ void IPLimit::Load() {
 
 	numBytes = Plugin_FS_Read(&header, sizeof(IPLimitFileHeader), fileHandle);
 
-	if (numBytes == 0)  {
-		Plugin_Printf("[VPN BLOCKER] Couldn't read %s header, is it corrupt?\n", file->string);
+	if (numBytes == 0 || header.ver != IPLIMIT_FILE_HEADER_VER)  {
 		Plugin_FS_FCloseFile(fileHandle);
-		return;
-	}
-
-	if (header.ver != IPLIMIT_FILE_HEADER_VER) {
-		Plugin_Printf("[VPN BLOCKER] Couldn't read %s, unsupported format\n", file->string);
-		Plugin_FS_FCloseFile(fileHandle);
+		Create();
 		return;
 	}
 
 	Plugin_FS_Read(&count, sizeof(uint32_t), fileHandle);
 	Plugin_FS_Read(&reset, sizeof(time_t), fileHandle);
 
+	Plugin_Printf("Got limit info (count: %u, reset: %llu)\n", count, (uint64_t)reset);
+
 	Plugin_FS_FCloseFile(fileHandle);
+
+	IPLimit::TryReset();
 	return;
 }
 
@@ -105,6 +97,8 @@ void IPLimit::Save() {
 	Plugin_FS_Write(&header, sizeof(IPLimitFileHeader), fileHandle);
 	Plugin_FS_Write(&count, sizeof(uint32_t), fileHandle);
 	Plugin_FS_Write(&reset, sizeof(time_t), fileHandle);
+
+	Plugin_Printf("Stored limit info (count: %u, reset: %llu)\n", count, (uint64_t)reset);
 
 	Plugin_FS_FCloseFile(fileHandle);
 	Plugin_FS_SV_HomeCopyFile(strdup(tmpFile.c_str()), file->string);
