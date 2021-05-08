@@ -87,7 +87,27 @@ void IPLimit::Load() {
 }
 
 void IPLimit::Save() {
+	fileHandle_t fileHandle;
+	std::string tmpFile(file->string);
 
+	tmpFile += ".tmp";
+	fileHandle = Plugin_FS_SV_FOpenFileWrite(tmpFile.c_str());
+
+	if (fileHandle == 0) {
+		Plugin_PrintError("[VPN BLOCKER] Couldn't open %s\n", tmpFile.c_str());
+		Plugin_FS_FCloseFile(fileHandle);
+		return;
+	}
+
+	IPLimitFileHeader header;
+	header.size = ipMap.size();
+
+	Plugin_FS_Write(&header, sizeof(IPLimitFileHeader), fileHandle);
+	Plugin_FS_Write(&count, sizeof(uint32_t), fileHandle);
+	Plugin_FS_Write(&reset, sizeof(time_t), fileHandle);
+
+	Plugin_FS_FCloseFile(fileHandle);
+	Plugin_FS_SV_HomeCopyFile(strdup(tmpFile.c_str()), file->string);
 }
 
 void IPLimit::SetFile(CONVAR_T* var) {
