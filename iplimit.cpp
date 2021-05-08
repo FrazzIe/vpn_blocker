@@ -45,7 +45,45 @@ time_t GetResetEpoch() {
 }
 
 void IPLimit::Load() {
+	fileHandle_t fileHandle;
+	long fileLength;
 
+	fileLength = Plugin_FS_SV_FOpenFileRead(file->string, &fileHandle);
+
+	if (fileHandle == 0) {
+		Plugin_PrintWarning("[VPN BLOCKER] Couldn't open %s, does it exist?\n", file->string);
+		Plugin_FS_FCloseFile(fileHandle);
+		return;
+	}
+
+	if (fileLength < 1) {
+		Plugin_Printf("[VPN BLOCKER] Couldn't open %s because it's empty!\n", file->string);
+		Plugin_FS_FCloseFile(fileHandle);
+		return;
+	}
+
+	IPLimitFileHeader header;
+	int numBytes;
+
+	numBytes = Plugin_FS_Read(&header, sizeof(IPLimitFileHeader), fileHandle);
+
+	if (numBytes == 0)  {
+		Plugin_Printf("[VPN BLOCKER] Couldn't read %s header, is it corrupt?\n", file->string);
+		Plugin_FS_FCloseFile(fileHandle);
+		return;
+	}
+
+	if (header.ver != IPLIMIT_FILE_HEADER_VER) {
+		Plugin_Printf("[VPN BLOCKER] Couldn't read %s, unsupported format\n", file->string);
+		Plugin_FS_FCloseFile(fileHandle);
+		return;
+	}
+
+	Plugin_FS_Read(&count, sizeof(uint32_t), fileHandle);
+	Plugin_FS_Read(&reset, sizeof(time_t), fileHandle);
+
+	Plugin_FS_FCloseFile(fileHandle);
+	return;
 }
 
 void IPLimit::Save() {
