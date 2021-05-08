@@ -116,3 +116,20 @@ void IPLimit::SetFile(CONVAR_T* var) {
 	if (!file->string[0])
 		throw std::invalid_argument("Init failure. Cvar vpn_blocker_limit_file is not set\n");
 }
+
+bool IPLimit::LimitReached() {
+	return count >= limit;
+}
+
+bool IPLimit::LimitReset() {
+	time_t curTime = GetUTCEpoch();
+
+	if (curTime > reset) {
+		reset = GetResetEpoch();
+		count = 0;
+		Save();
+		return true;
+	}
+
+	return false;
+}
