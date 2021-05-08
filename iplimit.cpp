@@ -110,6 +110,12 @@ void IPLimit::Save() {
 	Plugin_FS_SV_HomeCopyFile(strdup(tmpFile.c_str()), file->string);
 }
 
+void IPLimit::Create() {
+	count = 0;
+	reset = GetResetEpoch();
+	Save();
+}
+
 void IPLimit::SetFile(CONVAR_T* var) {
 	file = (cvar_t*)var;
 
@@ -130,9 +136,7 @@ bool IPLimit::TryReset() {
 	time_t curTime = GetUTCEpoch();
 
 	if (curTime > reset) {
-		reset = GetResetEpoch();
-		count = 0;
-		Save();
+		Create();
 		return true;
 	}
 

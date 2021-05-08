@@ -24,6 +24,7 @@ private:
 public:
 	static void Load();
 	static void Save();
+	static void Create();
 	static void SetFile(CONVAR_T* var);
 	static void Increase();
 	static bool ReachedLimit();
