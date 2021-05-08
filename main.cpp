@@ -68,17 +68,18 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 		Plugin_Printf("Found %s cache entry containing (p->%f, t->%llu, u->%i)", addr.c_str(), cacheEntry.probability, cacheEntry.lastChecked, shouldUpdate);
 	}
 
-	if (IPLimit::LimitReached() && shouldUpdate) {
-		if (!IPLimit::LimitReset()) {
-			Plugin_Printf("[VPN BLOCKER] Limit reached, skipping...");
-			return;
+	if (shouldUpdate) {
+		IPLimit::Increase();
+		if (IPLimit::ReachedLimit()) {
+			if (!IPLimit::TryReset()) {
+				Plugin_Printf("[VPN BLOCKER] Limit reached, skipping...");
+				return;
+			}
 		}
-	}
 
-	if (!shouldUpdate)
-		result = IPResult(cacheEntry.probability, 200);
-	else
 		result = IPIntel::Check(addr);
+	} else
+		result = IPResult(cacheEntry.probability, 200);
 
 	if (result.probability == 2)
 		return;

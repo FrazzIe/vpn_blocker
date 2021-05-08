@@ -25,8 +25,9 @@ public:
 	static void Load();
 	static void Save();
 	static void SetFile(CONVAR_T* var);
-	static bool LimitReached();
-	static bool LimitReset();
+	static void Increase();
+	static bool ReachedLimit();
+	static bool TryReset();
 };
 
 #endif // IPLIMIT_H
