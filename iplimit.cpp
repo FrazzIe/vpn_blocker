@@ -121,8 +121,10 @@ void IPLimit::SetFile(CONVAR_T* var) {
 }
 
 void IPLimit::Increase() {
-	if (count != limit)
+	if (count != limit) {
 		count++;
+		Save();
+	}
 }
 
 bool IPLimit::ReachedLimit() {
