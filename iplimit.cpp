@@ -10,7 +10,7 @@ uint32_t IPLimit::count = 0;
 time_t IPLimit::reset = 0;
 
 //https://stackoverflow.com/questions/5590429/calculating-daylight-saving-time-from-only-date
-bool isDST(tm *tm) {
+bool IsDST(tm *tm) {
 	//January, february, and december are out.
 	if (tm->tm_mon < 2 || tm->tm_mon > 10) { return false; }
 	//April to October are in
@@ -33,7 +33,7 @@ time_t GetUTCEpoch() {
 time_t GetResetEpoch() {
 	time_t t = time(NULL);
 	struct tm *tInfo = gmtime(&t);
-	bool offsetDST = isDST(tInfo);
+	bool offsetDST = IsDST(tInfo);
 	int hoursToAdd = offsetDST ? 4 : 5;
 
 	//Strip h/m/s
