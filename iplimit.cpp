@@ -92,7 +92,6 @@ void IPLimit::Save() {
 	}
 
 	IPLimitFileHeader header;
-	header.size = ipMap.size();
 
 	Plugin_FS_Write(&header, sizeof(IPLimitFileHeader), fileHandle);
 	Plugin_FS_Write(&count, sizeof(uint32_t), fileHandle);
