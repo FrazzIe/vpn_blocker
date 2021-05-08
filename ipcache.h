@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_map>
 
-#define IP_FILE_HEADER_VER 1
+#define IPCACHE_FILE_HEADER_VER 1
 
 struct IPInfo {
 	float probability;
@@ -21,11 +21,11 @@ struct IPInfo {
 	}
 };
 
-struct IPFileHeader {
+struct IPCacheFileHeader {
 	uint64_t size;
 	int ver;
 
-	IPFileHeader() : size(0), ver(IP_FILE_HEADER_VER) {
+	IPCacheFileHeader() : size(0), ver(IPCACHE_FILE_HEADER_VER) {
 
 	}
 };

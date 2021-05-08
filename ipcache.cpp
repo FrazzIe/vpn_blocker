@@ -30,10 +30,10 @@ void IPCache::Load() {
 		return;
 	}
 
-	IPFileHeader header;
+	IPCacheFileHeader header;
 	int numBytes;
 
-	numBytes = Plugin_FS_Read(&header, sizeof(IPFileHeader), fileHandle);
+	numBytes = Plugin_FS_Read(&header, sizeof(IPCacheFileHeader), fileHandle);
 
 	if (numBytes == 0)  {
 		Plugin_Printf("[VPN BLOCKER] Couldn't read %s header, is it corrupt?\n", file->string);
@@ -41,7 +41,7 @@ void IPCache::Load() {
 		return;
 	}
 
-	if (header.ver != IP_FILE_HEADER_VER) {
+	if (header.ver != IPCACHE_FILE_HEADER_VER) {
 		Plugin_Printf("[VPN BLOCKER] Couldn't read %s, unsupported format\n", file->string);
 		Plugin_FS_FCloseFile(fileHandle);
 		return;
@@ -80,10 +80,10 @@ void IPCache::Save() {
 		return;
 	}
 
-	IPFileHeader header;
+	IPCacheFileHeader header;
 	header.size = ipMap.size();
 
-	Plugin_FS_Write(&header, sizeof(IPFileHeader), fileHandle);
+	Plugin_FS_Write(&header, sizeof(IPCacheFileHeader), fileHandle);
 
 	for (std::pair<uint64_t, IPInfo> entry : ipMap) {
 		Plugin_FS_Write(&entry.first, sizeof(uint64_t), fileHandle);
