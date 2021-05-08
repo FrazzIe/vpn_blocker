@@ -33,7 +33,7 @@ time_t GetUTCEpoch() {
 time_t GetResetEpoch() {
 	time_t t = time(NULL);
 	struct tm *tInfo = gmtime(&t);
-	int hour = isDST(tInfo) ? 4 : 5
+	int hour = isDST(tInfo) ? 4 : 5;
 	if (tInfo->tm_hour >= hour)
 		tInfo->tm_mday++;
 	tInfo->tm_hour = hour;
