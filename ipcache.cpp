@@ -3,11 +3,10 @@
 #endif
 #include "ipcache.h"
 #include <string>
-#include <chrono>
 #include <math.h>
 
-int64_t GetSystemEpoch() {
-	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+time_t GetSystemEpoch() {
+	return time(NULL);
 }
 
 std::unordered_map<uint64_t, IPInfo> IPCache::ipMap = {};
@@ -48,7 +47,7 @@ void IPCache::Load() {
 		return;
 	}
 
-	int64_t curTime = GetSystemEpoch();
+	time_t curTime = GetSystemEpoch();
 
 	for (uint64_t i = 0; i < header.size; i++) {
 		uint64_t readAddress;
@@ -56,7 +55,7 @@ void IPCache::Load() {
 
 		Plugin_FS_Read(&readAddress, sizeof(uint64_t), fileHandle);
 		Plugin_FS_Read(&readEntry.probability, sizeof(float), fileHandle);
-		Plugin_FS_Read(&readEntry.lastChecked, sizeof(int64_t), fileHandle);
+		Plugin_FS_Read(&readEntry.lastChecked, sizeof(time_t), fileHandle);
 
 		//Plugin_Printf("Got %llu with %f and %lld from entry %llu\n", readAddress, readEntry.probability, readEntry.lastChecked, i);
 
@@ -89,7 +88,7 @@ void IPCache::Save() {
 	for (std::pair<uint64_t, IPInfo> entry : ipMap) {
 		Plugin_FS_Write(&entry.first, sizeof(uint64_t), fileHandle);
 		Plugin_FS_Write(&entry.second.probability, sizeof(float), fileHandle);
-		Plugin_FS_Write(&entry.second.lastChecked, sizeof(int64_t), fileHandle);
+		Plugin_FS_Write(&entry.second.lastChecked, sizeof(time_t), fileHandle);
 
 		//Plugin_Printf("Stored %llu with %f and %lld from entry %llu\n", entry.first, entry.second.probability, entry.second.lastChecked);
 	}
@@ -130,13 +129,13 @@ void IPCache::CommandHandler() {
 	std::string cmd(cmdName);
 
 	if (cmd == "vpn_cache_info") {
-		int64_t curTime = GetSystemEpoch();
+		time_t curTime = GetSystemEpoch();
 		uint64_t lastChecked = 0;
 		uint64_t count = 0;
 		uint32_t hour, minute;
 
 		for (std::pair<uint64_t, IPInfo> entry : ipMap) {
-			lastChecked = ((curTime - (entry.second.lastChecked - cacheLength)) * 0.001) / 60;
+			lastChecked = (curTime - (entry.second.lastChecked - cacheLength)) / 60;
 			minute = floor(lastChecked % 60);
 			lastChecked /= 60;
 			hour = floor(lastChecked % 24);

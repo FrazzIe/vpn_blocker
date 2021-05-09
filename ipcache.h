@@ -10,7 +10,7 @@
 
 struct IPInfo {
 	float probability;
-	int64_t lastChecked;
+	time_t lastChecked;
 
 	IPInfo() : probability(2), lastChecked(0) {
 
@@ -33,7 +33,7 @@ struct IPCacheFileHeader {
 class IPCache {
 private:
 	static std::unordered_map<uint64_t, IPInfo> ipMap;
-	static const int64_t cacheLength = 21600000; //6 Hours
+	static const time_t cacheLength = 43200; //6 Hours
 	static cvar_t *file;
 public:
 	static const int cmdPower = 100;
