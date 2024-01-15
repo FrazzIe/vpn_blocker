@@ -11,7 +11,7 @@
 #define PLUGIN_DESC "Prevent VPN usage by player"
 #define PLUGIN_DESC_LONG "Prevent players joining that are using a VPN by using the IP Intelligence API"
 #define PLUGIN_VER_MAJ 0
-#define PLUGIN_VER_MIN 2
+#define PLUGIN_VER_MIN 3
 
 PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	try {
