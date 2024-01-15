@@ -27,8 +27,8 @@ void IPIntel::SetFlag(CONVAR_T* var) {
 
 	if (!flag->string[0])
 		throw std::invalid_argument("Init failure. Cvar vpn_blocker_flag is not set\n");
-	else if (flag->string[1] || (flag->string[0] != 'm' && flag->string[0] != 'b'))
-		throw std::invalid_argument("Init failure. Cvar vpn_blocker_flag is invalid (use m or b)\n");
+	else if (flag->string[1] || (flag->string[0] != 'm' && flag->string[0] != 'b' && flag->string[0] != 'f'))
+		throw std::invalid_argument("Init failure. Cvar vpn_blocker_flag is invalid (use m or b or f)\n");
 
 	if (email != NULL)
 		SetAPIParams();
