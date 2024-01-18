@@ -11,7 +11,7 @@
 #define PLUGIN_DESC "Prevent VPN usage by player"
 #define PLUGIN_DESC_LONG "Prevent players joining that are using a VPN by using the IP Intelligence API"
 #define PLUGIN_VER_MAJ 0
-#define PLUGIN_VER_MIN 3
+#define PLUGIN_VER_MIN 4
 
 PCL int OnInit(){ //Function executed after the plugin is loaded on the server.
 	try {
@@ -49,7 +49,7 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 		return;
 	else if (baninfo->adr.type == NA_BAD) {
 		std::string badAddressMsg = "Got a bad address when connecting, please try again!";
-		strncpy(message, badAddressMsg.c_str(), badAddressMsg.length() + 1);
+		strncpy(message, badAddressMsg.c_str(), len);
 		return;
 	}
 
@@ -99,8 +99,8 @@ PCL void OnPlayerGetBanStatus(baninfo_t* baninfo, char* message, int len) {
 		char tempId[128];
 
 		Plugin_SteamIDToString(baninfo->playerid, tempId, sizeof(tempId));
-		snprintf(format, strlen(kickMsg) + strlen(tempId) + 24, "%s [%i/100] [ID: %s]", kickMsg, percentage, tempId);
-		strncpy(message, format, strlen(format) + 1);
+		snprintf(format, sizeof(format), "%s [%i/100] [ID: %s]", kickMsg, percentage, tempId);
+		strncpy(message, format, len);
 		Plugin_Printf("[VPN BLOCKER] Removed %s [%llu] %i%c\n", baninfo->playername, baninfo->playerid, percentage, '%');
 	}
 
@@ -124,4 +124,14 @@ PCL void OnInfoRequest(pluginInfo_t *info) { //Function used to obtain informati
 	strncpy(info->fullName, PLUGIN_NAME, sizeof(info->fullName)); //Full plugin name
 	strncpy(info->shortDescription, PLUGIN_DESC, sizeof(info->shortDescription)); //Short plugin description
 	strncpy(info->longDescription, PLUGIN_DESC_LONG, sizeof(info->longDescription)); //Long plugin description
+}
+
+PCL void OnExitLevel() {
+	IPCache::Save();
+	IPLimit::Save();
+}
+
+PCL void OnTerminate() {
+	IPCache::Save();
+	IPLimit::Save();
 }

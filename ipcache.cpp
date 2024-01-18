@@ -106,13 +106,11 @@ void IPCache::SetFile(CONVAR_T* var) {
 
 void IPCache::Insert(uint64_t addr, float probability) {
 	ipMap.insert(std::make_pair(addr, IPInfo(probability, GetSystemEpoch() + cacheLength)));
-	Save();
 }
 
 void IPCache::Update(IPInfo &entry, float probability) {
 	entry.probability = probability;
 	entry.lastChecked = GetSystemEpoch() + cacheLength;
-	Save();
 }
 
 void IPCache::CommandHandler() {

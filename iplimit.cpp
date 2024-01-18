@@ -123,8 +123,7 @@ void IPLimit::SetFile(CONVAR_T* var) {
 void IPLimit::Increase() {
 	if (count != limit) {
 		count++;
-		if (!IPLimit::TryReset())
-			Save();
+		IPLimit::TryReset();
 	}
 }
 
